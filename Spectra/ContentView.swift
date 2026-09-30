@@ -7,18 +7,33 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+struct RootView: View {
 
-#Preview {
-    ContentView()
+    @EnvironmentObject private var coordinator: AppCoordinator
+
+    var body: some View {
+
+        NavigationStack(path: $coordinator.path) {
+
+            ImportView()
+
+                .navigationDestination(for: AppRoute.self) { route in
+
+                    switch route {
+
+                    case .player(let track):
+                        PlayerView(track: track)
+
+                    case .visualizer(let track):
+                        VisualizerView(track: track)
+
+                    case .audioDNA(let track, let features):
+                        AudioDNAView(
+                            track: track,
+                            features: features
+                        )
+                    }
+                }
+        }
+    }
 }
